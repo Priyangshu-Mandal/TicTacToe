@@ -24,7 +24,6 @@ class Game(Tk):
         return self.sign
 
     def mark(self, x, y):
-        # TODO: make sure that one button is not presses more than once
         for button in self.buttonList:
             if button[1]["x"] == x and button[1]["y"] == y:
                 button[0].configure(text=self.decideSign())

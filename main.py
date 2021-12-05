@@ -24,12 +24,14 @@ class Game(Tk):
         return self.sign
 
     def mark(self, x, y):
+        # TODO: make sure that one button is not presses more than once
         for button in self.buttonList:
             if button[1]["x"] == x and button[1]["y"] == y:
                 button[0].configure(text=self.decideSign())
+                button[0].configure(command=lambda: self.falseTurn("twoPress"))
                 self.checkWinner()
                 self.marks += 1
-        if self.marks >= 9:
+        if self.marks >= 9 and self.winner is None:
             tkinter.messagebox.showinfo(title="Match Tied!", message="Oh! Seems like this match has been tied!")
 
     def checkWinner(self):
@@ -64,10 +66,14 @@ class Game(Tk):
         self.winner = btn1["text"]
         tkinter.messagebox.showinfo(title="Match won!", message=f"{self.winner} has won this match!")
         for button in self.buttonList:
-            button[0].configure(command=self.falseTurn)
+            button[0].configure(command=lambda: self.falseTurn("turn-after-win"))
 
-    def falseTurn(self):
-        tkinter.messagebox.showerror(title="False Turn", message=f"You cannot give a turn! {self.winner} has already won!")
+    def falseTurn(self, reason):
+        if reason == "twoPress":
+            message = "You cannot press this button more than once!"
+        else:
+            message = f"You cannot give a turn! {self.winner} has already won!"
+        tkinter.messagebox.showerror(title="False Turn", message=message)
 
 
 if __name__ == '__main__':
